@@ -1,11 +1,9 @@
 package main
 
 import (
-	"ArekerA/BasicCommunicator/trace"
 	"flag"
 	"log"
 	"net/http"
-	"os"
 	"path/filepath"
 	"sync"
 	"text/template"
@@ -28,8 +26,8 @@ func main() {
 	var addr = flag.String("addr", ":8080", "Adres aplikacji internetowej")
 	flag.Parse()
 	r := newRoom()
-	r.tracer = trace.New(os.Stdout)
-	http.Handle("/", &templateHnadler{filename: "chat.html"})
+	//r.tracer = trace.New(os.Stdout)
+	http.Handle("/chat", MustAuth(&templateHnadler{filename: "chat.html"}))
 	http.Handle("/room", r)
 	go r.run()
 	if err := http.ListenAndServe(*addr, nil); err != nil {
